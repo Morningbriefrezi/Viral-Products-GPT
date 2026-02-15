@@ -1,3 +1,5 @@
+console.log("ENV KEY:", process.env.OPENAI_API_KEY);
+
 import OpenAI from "openai";
 import { buildPostPrompt } from "../utils/prompts.js";
 
