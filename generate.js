@@ -21,11 +21,22 @@ async function generateMarketingPlan() {
         { role: "system", content: "You are a world-class marketing strategist." },
         { role: "user", content: buildPrompt() }
       ],
-      temperature: 0.9
+      temperature: 0.95
     })
   });
 
   const data = await response.json();
+
+  if (!response.ok) {
+    console.error("OpenAI API Error:", data);
+    throw new Error("OpenAI request failed");
+  }
+
+  if (!data.choices || !data.choices[0]) {
+    console.error("Unexpected OpenAI response:", data);
+    throw new Error("Invalid OpenAI response structure");
+  }
+
   return data.choices[0].message.content;
 }
 
@@ -45,6 +56,12 @@ async function sendToTelegram(text) {
 }
 
 (async () => {
-  const content = await generateMarketingPlan();
-  await sendToTelegram(content);
+  try {
+    const content = await generateMarketingPlan();
+    await sendToTelegram(content);
+    console.log("Marketing plan sent successfully.");
+  } catch (error) {
+    console.error("Fatal Error:", error.message);
+    process.exit(1);
+  }
 })();
