@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { startBot } from "./telegram.js";
 
 process.on("unhandledRejection", console.error);
